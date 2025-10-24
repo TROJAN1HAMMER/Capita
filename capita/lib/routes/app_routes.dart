@@ -6,6 +6,9 @@ import '../views/quiz/quiz_view.dart';
 import '../views/leaderboard/leaderboard_view.dart';
 import '../views/module/learning_module_view.dart';
 import '../core/models/track.dart';
+import '../views/auth/login_view.dart';
+import '../views/auth/signup_view.dart';
+import '../views/profile/profile_view.dart';
 
 class AppRoutes {
   static const String home = '/';
@@ -14,6 +17,9 @@ class AppRoutes {
   static const String quiz = '/quiz';
   static const String moduleDetail = '/module';
   static const String leaderboard = '/leaderboard';
+  static const String login = '/login';
+  static const String signup = '/signup';
+  static const String profile = '/profile';
 
   static Map<String, WidgetBuilder> get routes => {
     home: (_) => const HomeView(),
@@ -28,5 +34,8 @@ class AppRoutes {
 
     quiz: (_) => const QuizView(),
     leaderboard: (_) => const LeaderboardView(),
+    login: (_) => const LoginView(),
+    signup: (_) => const SignupView(),
+    profile: (_) => const ProfileView(),
   };
 }

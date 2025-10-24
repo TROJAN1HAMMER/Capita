@@ -5,6 +5,7 @@ import '../shared/widgets/card_tile.dart';
 import '../../routes/app_routes.dart';
 import '../shared/widgets/owl_mascot.dart';
 import '../../core/constants/app_colors.dart';
+import '../shared/widgets/gradient_background.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -14,22 +15,18 @@ class HomeView extends StatelessWidget {
     final trackCtrl = Provider.of<TrackController>(context);
 
     return Scaffold(
-      body: Stack(
-        children: [
-          Container(
-            height: 280,
-            decoration: const BoxDecoration(gradient: AppColors.primaryGradient),
-          ),
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
+      body: GradientBackground(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header with title, subtitle, actions aligned neatly
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
@@ -39,6 +36,7 @@ class HomeView extends StatelessWidget {
                                 .titleLarge!
                                 .copyWith(color: Colors.white),
                           ),
+                          const SizedBox(height: 4),
                           Text(
                             'Ready to grow your finance skills?',
                             style: Theme.of(context)
@@ -48,43 +46,50 @@ class HomeView extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const OwlMascot(size: 80),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.background,
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                      padding: const EdgeInsets.all(12),
-                      child: ListView.builder(
-                        itemCount: trackCtrl.tracks.length,
-                        itemBuilder: (context, index) {
-                          final t = trackCtrl.tracks[index];
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8),
-                            child: CardTile(
-                              title: t.title,
-                              subtitle: t.subtitle,
-                              assetIcon: t.icon,
-                              onTap: () {
-                                trackCtrl.selectTrack(t.id);
-                                Navigator.pushNamed(
-                                    context, AppRoutes.trackDetail);
-                              },
-                            ),
-                          );
-                        },
-                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.settings, color: Colors.white),
+                      tooltip: 'Profile & Settings',
+                      onPressed: () =>
+                          Navigator.pushNamed(context, AppRoutes.profile),
+                    ),
+                    const SizedBox(width: 8),
+                    const OwlMascot(size: 64),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                // Content card area with proper spacing
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.background,
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    padding: const EdgeInsets.all(12),
+                    child: ListView.builder(
+                      itemCount: trackCtrl.tracks.length,
+                      itemBuilder: (context, index) {
+                        final t = trackCtrl.tracks[index];
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: CardTile(
+                            title: t.title,
+                            subtitle: t.subtitle,
+                            assetIcon: t.icon,
+                            onTap: () {
+                              trackCtrl.selectTrack(t.id);
+                              Navigator.pushNamed(context, AppRoutes.trackDetail);
+                            },
+                          ),
+                        );
+                      },
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }

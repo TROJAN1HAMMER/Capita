@@ -5,6 +5,7 @@ class Module {
   final int order;
   final Duration estimatedTime; // e.g. 10 minutes
   final bool locked;
+  final List<String> questions;
 
   Module({
     required this.id,
@@ -13,5 +14,6 @@ class Module {
     this.order = 0,
     this.estimatedTime = const Duration(minutes: 10),
     this.locked = false,
+    this.questions = const [],
   });
 }

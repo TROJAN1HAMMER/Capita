@@ -21,14 +21,61 @@ class LocalDataService {
             description: 'Cash, digital, UPI, banking system in India.',
             order: 1,
             estimatedTime: const Duration(minutes: 12),
+            questions: [
+              'What does UPI stand for?',
+              'Name two types of bank accounts.',
+              'What is the role of RBI?',
+            ],
           ),
           Module(
             id: 'pf_m2',
             title: 'Budgeting & Savings',
             description: '50-30-20, emergency funds, expense tracking.',
             order: 2,
+            estimatedTime: const Duration(minutes: 14),
+            questions: [
+              'Explain the 50-30-20 rule.',
+              'What is an emergency fund?',
+              'Name one budgeting app.',
+            ],
           ),
-          // add remaining modules...
+          Module(
+            id: 'pf_m3',
+            title: 'Investing Basics',
+            description: 'Risk vs return, mutual funds, SIPs, asset allocation.',
+            order: 3,
+            estimatedTime: const Duration(minutes: 15),
+            questions: [
+              'Define risk vs return.',
+              'What is a mutual fund?',
+              'Why diversify your portfolio?',
+            ],
+          ),
+          Module(
+            id: 'pf_m4',
+            title: 'Credit & Loans',
+            description: 'Credit score, EMI, secured vs unsecured loans.',
+            order: 4,
+            estimatedTime: const Duration(minutes: 12),
+            questions: [
+              'What is a credit score?',
+              'How is EMI calculated conceptually?',
+              'Give one example of a secured loan.',
+            ],
+          ),
+          Module(
+            id: 'pf_m5',
+            title: 'Taxes & Compliance',
+            description: 'PAN, income tax basics, Section 80C, filing returns.',
+            order: 5,
+            estimatedTime: const Duration(minutes: 16),
+            locked: true,
+            questions: [
+              'What is PAN?',
+              'Current 80C limit?',
+              'Which form is used for salaried individuals?',
+            ],
+          ),
         ],
       ),
     );
@@ -42,11 +89,65 @@ class LocalDataService {
         modules: [
           Module(
             id: 'cf_m1',
-            title: 'Introduction to Corporate Finance',
-            description: 'Goal: maximizing shareholder wealth...',
+            title: 'Intro to Corporate Finance',
+            description: 'Firm objectives, capital structure, agency problems.',
             order: 1,
+            estimatedTime: const Duration(minutes: 12),
+            questions: [
+              'Primary goal of corporate finance?',
+              'What is capital structure?',
+              'Define agency problem.',
+            ],
           ),
-          // add more
+          Module(
+            id: 'cf_m2',
+            title: 'Financial Statements',
+            description: 'Balance sheet, P&L, cash flow statement linkage.',
+            order: 2,
+            estimatedTime: const Duration(minutes: 14),
+            questions: [
+              'Balance sheet equation?',
+              'Three cash flow categories?',
+              'Difference between revenue and cash?',
+            ],
+          ),
+          Module(
+            id: 'cf_m3',
+            title: 'Capital Budgeting',
+            description: 'NPV, IRR, payback period, project selection.',
+            order: 3,
+            estimatedTime: const Duration(minutes: 15),
+            questions: [
+              'Define NPV.',
+              'What does IRR represent?',
+              'Payback period pros/cons?',
+            ],
+          ),
+          Module(
+            id: 'cf_m4',
+            title: 'Working Capital Management',
+            description: 'Inventory, receivables, CCC, liquidity.',
+            order: 4,
+            estimatedTime: const Duration(minutes: 13),
+            questions: [
+              'What is the cash conversion cycle?',
+              'Two inventory valuation methods?',
+              'Receivables vs payables?',
+            ],
+          ),
+          Module(
+            id: 'cf_m5',
+            title: 'Cost of Capital',
+            description: 'WACC, cost of debt/equity, CAPM basics.',
+            order: 5,
+            estimatedTime: const Duration(minutes: 16),
+            locked: true,
+            questions: [
+              'Define WACC.',
+              'Components of cost of equity?',
+              'CAPM formula elements?',
+            ],
+          ),
         ],
       ),
     );
