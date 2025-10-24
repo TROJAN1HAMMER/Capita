@@ -1,94 +1,163 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../core/controllers/track_controller.dart';
-import '../../core/models/module.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../quiz/quiz_view.dart';
+import '../leaderboard/leaderboard_view.dart';
+import '../module/learning_module_view.dart';
 
-class TrackDetailView extends StatelessWidget {
+class TrackDetailView extends StatefulWidget {
   const TrackDetailView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final trackCtrl = Provider.of<TrackController>(context);
-    final track = trackCtrl.selected;
+  State<TrackDetailView> createState() => _TrackDetailViewState();
+}
 
-    if (track == null) {
-      return Scaffold(
-        appBar: AppBar(title: const Text('Track')),
-        body: const Center(child: Text('No track selected.')),
+class _TrackDetailViewState extends State<TrackDetailView> {
+  final List<String> modules = [
+    'Budgeting Basics',
+    'Saving and Investing',
+    'Credit & Loans',
+    'Financial Planning',
+    'Understanding Taxes',
+  ];
+
+  List<bool> completed = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    loadProgress();
+  }
+
+  Future<void> loadProgress() async {
+    final prefs = await SharedPreferences.getInstance();
+    final saved = prefs.getStringList('completedModules') ?? [];
+    setState(() {
+      completed = List.generate(
+        modules.length,
+        (i) => saved.contains(modules[i]),
       );
+      isLoading = false;
+    });
+  }
+
+  Future<void> markDone(String moduleTitle) async {
+    final prefs = await SharedPreferences.getInstance();
+    final saved = prefs.getStringList('completedModules') ?? [];
+    if (!saved.contains(moduleTitle)) {
+      saved.add(moduleTitle);
+      await prefs.setStringList('completedModules', saved);
+      loadProgress();
+    }
+  }
+
+  int get completedCount => completed.where((e) => e).length;
+  bool get allDone => completedCount == modules.length;
+
+  @override
+  Widget build(BuildContext context) {
+    if (isLoading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    final modules = track.modules..sort((a, b) => a.order.compareTo(b.order));
-
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            expandedHeight: 180,
-            floating: false,
-            pinned: true,
-            flexibleSpace: FlexibleSpaceBar(
-              title: Text(track.title),
-              background: Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Color(0xFF4F46E5), Color(0xFF38BDF8)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
+      appBar: AppBar(
+        title: const Text("Track Progress"),
+        backgroundColor: Colors.blueAccent,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            // Header
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Financial Foundations",
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
-              ),
+                const SizedBox(height: 6),
+                LinearProgressIndicator(
+                  value: completedCount / modules.length,
+                  backgroundColor: Colors.grey[300],
+                  color: Colors.green,
+                  minHeight: 8,
+                ),
+                const SizedBox(height: 8),
+                Text("${completedCount}/${modules.length} modules completed"),
+              ],
             ),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.all(16),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final Module m = modules[index];
-                  return Container(
-                    margin: const EdgeInsets.only(bottom: 12),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
-                          blurRadius: 6,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
-                    ),
+            const SizedBox(height: 20),
+
+            // Module list
+            Expanded(
+              child: ListView.builder(
+                itemCount: modules.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    color: completed[index] ? Colors.green[50] : null,
                     child: ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: const Color(0xFF4F46E5),
-                        child: Text('${m.order}',
-                            style: const TextStyle(color: Colors.white)),
-                      ),
-                      title: Text(m.title,
-                          style: const TextStyle(fontWeight: FontWeight.w600)),
-                      subtitle: Text(m.description),
-                      trailing: m.locked
-                          ? const Icon(Icons.lock, color: Colors.grey)
-                          : const Icon(Icons.play_circle_fill_outlined,
-                              color: Color(0xFF4F46E5)),
-                      onTap: m.locked
-                          ? null
-                          : () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('Opening: ${m.title}'),
-                                ),
-                              );
-                            },
+                      title: Text(modules[index]),
+                      trailing: completed[index]
+                          ? const Icon(Icons.check_circle, color: Colors.green)
+                          : const Icon(Icons.radio_button_unchecked),
+                      onTap: () async {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => LearningModuleView(
+                              moduleTitle: modules[index],
+                              onComplete: () => markDone(modules[index]),
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   );
                 },
-                childCount: modules.length,
               ),
             ),
-          ),
-        ],
+
+            const SizedBox(height: 10),
+
+            // Quiz + Leaderboard
+            Column(
+              children: [
+                ElevatedButton(
+                  onPressed: allDone
+                      ? () => Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const QuizView()),
+                        )
+                      : null,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: allDone ? Colors.blueAccent : Colors.grey,
+                    minimumSize: const Size(double.infinity, 48),
+                  ),
+                  child: Text(
+                    allDone ? "Start Quiz" : "Complete all modules to unlock",
+                  ),
+                ),
+                const SizedBox(height: 10),
+                OutlinedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const LeaderboardView(),
+                      ),
+                    );
+                  },
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: const Size(double.infinity, 48),
+                  ),
+                  child: const Text("View Leaderboard"),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
