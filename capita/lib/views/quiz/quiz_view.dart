@@ -93,6 +93,84 @@ class _QuizViewState extends State<QuizView> {
       ],
       'answer': 1,
     },
+    {
+      'q': 'What is SIP in mutual funds?',
+      'options': [
+        'Systematic Investment Plan',
+        'Saving Insurance Policy',
+        'Short-term Income Portfolio',
+      ],
+      'answer': 0,
+    },
+    {
+      'q': 'Which of these is an example of an asset?',
+      'options': ['Credit card debt', 'Fixed deposit', 'Outstanding loan'],
+      'answer': 1,
+    },
+    {
+      'q': 'What does term insurance provide?',
+      'options': [
+        'Guaranteed returns on investment',
+        'Life cover for a fixed period',
+        'Health coverage for hospitalization',
+      ],
+      'answer': 1,
+    },
+    {
+      'q': 'What is the main purpose of diversification in investing?',
+      'options': [
+        'To spread risk across investments',
+        'To increase debt',
+        'To invest only in gold',
+      ],
+      'answer': 0,
+    },
+    {
+      'q': 'Which of the following is a fixed-income investment?',
+      'options': ['Mutual fund', 'Government bond', 'Equity share'],
+      'answer': 1,
+    },
+    {
+      'q': 'What does “liquidity” mean in finance?',
+      'options': [
+        'Ease of converting an asset into cash',
+        'Earning high profits quickly',
+        'Avoiding market losses',
+      ],
+      'answer': 0,
+    },
+    {
+      'q': 'Which one is a short-term investment option?',
+      'options': [
+        'Public Provident Fund (PPF)',
+        'Savings account',
+        'Real estate',
+      ],
+      'answer': 1,
+    },
+    {
+      'q': 'What does “dividend” mean in stock investing?',
+      'options': [
+        'A portion of company profits paid to shareholders',
+        'The interest paid by banks on deposits',
+        'The loan repayment amount',
+      ],
+      'answer': 0,
+    },
+    {
+      'q': 'Which document is crucial for filing income tax in India?',
+      'options': ['Aadhaar card', 'PAN card', 'Voter ID'],
+      'answer': 1,
+    },
+    {
+      'q': 'What does “mutual fund NAV” stand for?',
+      'options': [
+        'Net Asset Value',
+        'Nominal Account Value',
+        'New Annual Value',
+      ],
+      'answer': 0,
+    },
   ];
 
   int? selected;
@@ -114,6 +192,9 @@ class _QuizViewState extends State<QuizView> {
     if (score < 3) return "Try harder next time.";
     if (score < 7) return "Keep learning.";
     if (score < 10) return "Very good, keep it up.";
+    if (score == 10) return "You aced it!";
+    if (score > 10 && score < 15) return "Very good, keep it up.";
+    if (score >= 15 && score < 20) return "Excellent performance!";
     return "You aced it!";
   }
 
